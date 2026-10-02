@@ -1,0 +1,19 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'com.bendmasterpro.app'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId 'com.bendmasterpro.app'
+        minSdk 26
+        targetSdk 36
+        versionCode 1
+        versionName '0.1'
+    }
+}
+
+dependencies {
+    implementation 'androidx.appcompat:appcompat:1.7.1'
+    implementation 'com.google.android.material:material:1.13.0'
+}
