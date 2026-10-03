@@ -4,67 +4,60 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.Gravity;
-import android.view.View;
-import android.view.ViewGroup;
+import android.text.*;
+import android.view.*;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.*;
 import java.util.*;
 
 public class MainActivity extends AppCompatActivity {
-    final int BG=Color.rgb(12,17,24), CARD=Color.rgb(22,29,39), TEXT=Color.rgb(241,245,249), MUTED=Color.rgb(148,163,184), BLUE=Color.rgb(59,130,246), BORDER=Color.rgb(51,65,85);
-    LinearLayout page,results; Spinner mat; EditText thick,die,punch,angle,length,f1,f2,bends; Button unitIn,unitMm;
-    boolean metric=false;
-    int sharedMat=4; String sharedT="",sharedD="",sharedR="",sharedA="90",sharedL="";
-    final String[] names={"5052-H32 Aluminum","6061-T6 Aluminum","A572 Grade 42","A572 Grade 50","Cold Rolled Steel","HRPO A36","304 Stainless","316 Stainless"};
-    final String[] cats={"aluminum","aluminum","steel","steel","steel","steel","stainless","stainless"};
-    final double[] k={0.41,0.41,0.44,0.44,0.44,0.44,0.43,0.43};
-    final double[] tensile={33000,45000,60000,65000,55000,58000,75000,85000};
-
-    int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
-    GradientDrawable box(int color,int stroke,int radius){GradientDrawable g=new GradientDrawable();g.setColor(color);g.setCornerRadius(dp(radius));if(stroke!=Color.TRANSPARENT)g.setStroke(dp(1),stroke);return g;}
-    TextView tv(String s,float z,int c){TextView v=new TextView(this);v.setText(s);v.setTextSize(z);v.setTextColor(c);return v;}
-    void margins(View v,int l,int t,int r,int b){ViewGroup.MarginLayoutParams p=(ViewGroup.MarginLayoutParams)v.getLayoutParams();p.setMargins(dp(l),dp(t),dp(r),dp(b));v.setLayoutParams(p);}
-    @Override public void onCreate(Bundle b){super.onCreate(b);getWindow().setStatusBarColor(BG);getWindow().setNavigationBarColor(BG);showCalculator();}
-
-    void shell(String heading,String sub,int active){
-        LinearLayout outer=new LinearLayout(this);outer.setOrientation(LinearLayout.VERTICAL);outer.setBackgroundColor(BG);
-        ViewCompat.setOnApplyWindowInsetsListener(outer,(v,i)->{Insets x=i.getInsets(WindowInsetsCompat.Type.systemBars());v.setPadding(0,x.top,0,x.bottom);return i;});
-        LinearLayout h=new LinearLayout(this);h.setOrientation(LinearLayout.VERTICAL);h.setPadding(dp(20),dp(16),dp(20),dp(12));
-        TextView logo=tv("BendMaster Pro",26,TEXT);logo.setTypeface(Typeface.DEFAULT,Typeface.BOLD);h.addView(logo);
-        TextView st=tv(sub,13,MUTED);h.addView(st);outer.addView(h);
-        ScrollView sv=new ScrollView(this);page=new LinearLayout(this);page.setOrientation(LinearLayout.VERTICAL);page.setPadding(dp(16),dp(4),dp(16),dp(28));sv.addView(page);outer.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
-        LinearLayout nav=new LinearLayout(this);nav.setBackgroundColor(CARD);nav.setPadding(dp(6),dp(6),dp(6),dp(6));
-        String[] ns={"Calculator","Flat Pattern","Materials","FAQ"};for(int i=0;i<4;i++){final int q=i;Button b=new Button(this);b.setText(ns[i]);b.setTextSize(10);b.setAllCaps(false);b.setTextColor(i==active?BLUE:MUTED);b.setBackground(box(i==active?Color.rgb(30,58,95):Color.TRANSPARENT,Color.TRANSPARENT,10));nav.addView(b,new LinearLayout.LayoutParams(0,dp(50),1));b.setOnClickListener(v->{saveShared();if(q==0)showCalculator();else if(q==1)showFlat();else if(q==2)showMaterials();else showFaq();});}outer.addView(nav);setContentView(outer);
-    }
-    LinearLayout card(String title,String subtitle){LinearLayout c=new LinearLayout(this);c.setOrientation(LinearLayout.VERTICAL);c.setPadding(dp(16),dp(15),dp(16),dp(15));c.setBackground(box(CARD,BORDER,14));page.addView(c,new LinearLayout.LayoutParams(-1,-2));margins(c,0,0,0,12);TextView h=tv(title,18,TEXT);h.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(h);if(subtitle!=null){TextView s=tv(subtitle,12,MUTED);c.addView(s);margins(s,0,2,0,8);}return c;}
-    EditText field(LinearLayout c,String label,String value){TextView l=tv(label,13,TEXT);l.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(l);margins(l,1,8,1,4);EditText e=new EditText(this);e.setText(value);e.setTextColor(TEXT);e.setTextSize(17);e.setSingleLine();e.setPadding(dp(12),0,dp(12),0);e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);e.setBackground(box(Color.rgb(15,23,33),BORDER,9));c.addView(e,new LinearLayout.LayoutParams(-1,dp(50)));return e;}
-    Spinner material(LinearLayout c){TextView l=tv("Material",13,TEXT);l.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(l);margins(l,1,4,1,4);Spinner s=new Spinner(this);ArrayAdapter<String>a=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,names){@Override public View getView(int p,View v,ViewGroup g){TextView t=(TextView)super.getView(p,v,g);t.setTextColor(TEXT);t.setTextSize(16);t.setPadding(dp(12),0,dp(12),0);return t;}};s.setAdapter(a);s.setSelection(sharedMat);s.setBackground(box(Color.rgb(15,23,33),BORDER,9));c.addView(s,new LinearLayout.LayoutParams(-1,dp(52)));return s;}
-    Button action(String s){Button b=new Button(this);b.setText(s);b.setTextColor(Color.WHITE);b.setTextSize(15);b.setTypeface(Typeface.DEFAULT,Typeface.BOLD);b.setBackground(box(BLUE,Color.TRANSPARENT,10));page.addView(b,new LinearLayout.LayoutParams(-1,dp(54)));margins(b,0,2,0,12);return b;}
-    void units(){LinearLayout r=new LinearLayout(this);r.setBackground(box(Color.rgb(15,23,33),BORDER,10));r.setPadding(dp(3),dp(3),dp(3),dp(3));page.addView(r,new LinearLayout.LayoutParams(-1,dp(48)));margins(r,0,0,0,12);unitIn=new Button(this);unitMm=new Button(this);unitIn.setText("INCH");unitMm.setText("MM");for(Button b:new Button[]{unitIn,unitMm}){b.setAllCaps(false);b.setTextColor(TEXT);r.addView(b,new LinearLayout.LayoutParams(0,-1,1));}unitIn.setOnClickListener(v->{metric=false;paintUnits();});unitMm.setOnClickListener(v->{metric=true;paintUnits();});paintUnits();}
-    void paintUnits(){unitIn.setBackground(box(!metric?Color.rgb(30,58,95):Color.TRANSPARENT,Color.TRANSPARENT,8));unitMm.setBackground(box(metric?Color.rgb(30,58,95):Color.TRANSPARENT,Color.TRANSPARENT,8));}
-    double val(EditText e){try{return Double.parseDouble(e.getText().toString());}catch(Exception x){return Double.NaN;}}
-    String str(EditText e){return e==null?"":e.getText().toString();}
-    void saveShared(){if(mat!=null)sharedMat=mat.getSelectedItemPosition();if(thick!=null)sharedT=str(thick);if(die!=null)sharedD=str(die);if(punch!=null)sharedR=str(punch);if(angle!=null&&!str(angle).isEmpty())sharedA=str(angle);if(length!=null)sharedL=str(length);}
-    void result(String head,String body){LinearLayout c=new LinearLayout(this);c.setOrientation(LinearLayout.VERTICAL);c.setPadding(dp(16),dp(14),dp(16),dp(14));c.setBackground(box(Color.rgb(17,24,34),BORDER,12));results.addView(c,new LinearLayout.LayoutParams(-1,-2));margins(c,0,0,0,9);TextView h=tv(head,12,BLUE);h.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(h);TextView b=tv(body,16,TEXT);b.setLineSpacing(0,1.2f);c.addView(b);margins(b,0,6,0,0);}
-
-    void showCalculator(){
-        shell("Bend Deduction Calculator","Accurate bend calculations for sheet metal fabrication",0);
-        LinearLayout c=card("Bend Deduction Calculator","Enter material and tooling data to calculate bend deduction, tonnage and minimum flange.");mat=material(c);thick=field(c,"Material Thickness",sharedT);die=field(c,"V-Die Opening",sharedD);punch=field(c,"Punch Radius",sharedR);angle=field(c,"Bend Angle",sharedA);length=field(c,"Bend Length",sharedL);
-        units();Button go=action("Calculate Bend");results=new LinearLayout(this);results.setOrientation(LinearLayout.VERTICAL);page.addView(results);go.setOnClickListener(v->calc());
-    }
-    void calc(){saveShared();results.removeAllViews();double t=val(thick),v=val(die),r=val(punch),a=val(angle),bl=val(length);if(metric){t/=25.4;v/=25.4;r/=25.4;bl/=25.4;}if(!(t>0&&v>0&&r>=0&&a>0&&a<180&&bl>0)){result("CHECK INPUTS","Complete all required bend dimensions.");return;}int i=sharedMat;double eff=Math.max(r,v/6),rad=Math.toRadians(a),ba=rad*(eff+k[i]*t),ossb=Math.tan(rad/2)*(eff+t),bd=2*ossb-ba;double tonsFt=1.33*tensile[i]*t*t/v/2000.0,total=tonsFt*(bl/12),rec=Math.ceil(total*1.15),flange=v/2+bd/2,cv=metric?25.4:1;String u=metric?" mm":" in";result("BEND RESULTS",String.format(Locale.US,"Bend allowance  %.3f%s\nBend deduction  %.3f%s\nEffective inside radius  %.3f%s",ba*cv,u,bd*cv,u,eff*cv,u));result("TONNAGE",String.format(Locale.US,"Required  %.2f tons\nRecommended  %.0f tons",total,rec));result("TOOLING",String.format(Locale.US,"Shortest flange  %.3f%s",flange*cv,u));}
-
-    void showFlat(){
-        shell("Flat Pattern Calculator","Use the same bend setup to calculate developed length",1);
-        LinearLayout dims=card("Flat Pattern","Enter flange dimensions below. Bend setup is synchronized with the Bend Deduction Calculator.");f1=field(dims,"Flange 1", "");f2=field(dims,"Flange 2", "");bends=field(dims,"Number of Bends","1");LinearLayout ref=card("Reference Data","Material, die, punch radius and angle are shared between both calculators.");mat=material(ref);thick=field(ref,"Material Thickness",sharedT);die=field(ref,"V-Die Opening",sharedD);punch=field(ref,"Punch Radius",sharedR);angle=field(ref,"Bend Angle",sharedA);
-        Button go=action("Calculate Flat Pattern");results=new LinearLayout(this);results.setOrientation(LinearLayout.VERTICAL);page.addView(results);
-        go.setOnClickListener(v->{saveShared();results.removeAllViews();double a1=val(f1),a2=val(f2),n=val(bends),t=val(thick),d=val(die),r=val(punch),ang=val(angle);if(!(a1>0&&a2>0&&n>=1&&t>0&&d>0&&r>=0&&ang>0)){result("CHECK INPUTS","Complete all required dimensions.");return;}int i=sharedMat;double er=Math.max(r,d/6),rr=Math.toRadians(ang),ba=rr*(er+k[i]*t),bd=2*Math.tan(rr/2)*(er+t)-ba,flat=a1+a2-n*bd;result("DEVELOPED FLAT",String.format(Locale.US,"Flange total  %.3f\nBend deduction  %.3f × %.0f\nFlat length  %.3f",a1+a2,bd,n,flat));});
-    }
-    void showMaterials(){shell("Material Library","Built-in BendMaster material reference",2);for(int i=0;i<names.length;i++){LinearLayout c=card(names[i],cats[i].toUpperCase(Locale.US));TextView x=tv(String.format(Locale.US,"Tensile Strength   %,.0f PSI\nK-Factor   %.2f",tensile[i],k[i]),15,TEXT);c.addView(x);}}
-    void showFaq(){shell("Fabrication FAQ","Press brake terms and quick reference",3);String[][] q={{"K-Factor","Location of the neutral axis through material thickness."},{"Bend Allowance","Arc length of the neutral axis through the bend."},{"Bend Deduction","Amount subtracted from outside flange dimensions to obtain the developed flat."},{"V-Die Opening","Width of the lower die opening used for air bending."},{"Tonnage","Estimated forming force. Always verify press brake and tooling capacities."}};for(String[] x:q){LinearLayout c=card(x[0],null);c.addView(tv(x[1],14,MUTED));}}
+ final int BG=Color.rgb(15,27,47), CARD=Color.rgb(30,43,63), INPUT=Color.rgb(53,70,91), BORDER=Color.rgb(48,65,86), TXT=Color.rgb(239,243,248), MUT=Color.rgb(148,163,184), BLUE=Color.rgb(96,165,250);
+ LinearLayout page,resultBox; Spinner mat,dieSpin; EditText thick,punch,angle,length,f1,f2,bends; TextView punchConv,lenConv; boolean metric=false;
+ int sharedMat=2; String sharedT="0.125",sharedD="",sharedR="0.030",sharedA="90",sharedL="1";
+ final String[] names={"5052-H32 Aluminum","6061-T6 Aluminum","A572 Gr42","A572 Gr50","CRS","HRPO A36","304 Stainless","316 Stainless"};
+ final String[] cats={"aluminum","aluminum","steel","steel","steel","steel","stainless","stainless"};
+ final double[] k={.41,.41,.44,.44,.44,.44,.43,.43}, tensile={33000,45000,60000,65000,55000,58000,75000,85000};
+ final String[] dies={"Select die width","0.250","0.375","0.500","0.625","0.750","1.000","1.250","1.500","2.000","2.500","3.000","4.000"};
+ int dp(int n){return Math.round(n*getResources().getDisplayMetrics().density);}
+ GradientDrawable box(int c,int stroke,int rad){GradientDrawable g=new GradientDrawable();g.setColor(c);g.setCornerRadius(dp(rad));g.setStroke(dp(1),stroke);return g;}
+ TextView t(String s,float z,int c){TextView v=new TextView(this);v.setText(s);v.setTextSize(z);v.setTextColor(c);return v;}
+ void mg(View v,int l,int top,int r,int b){ViewGroup.MarginLayoutParams p=(ViewGroup.MarginLayoutParams)v.getLayoutParams();p.setMargins(dp(l),dp(top),dp(r),dp(b));v.setLayoutParams(p);}
+ @Override public void onCreate(Bundle b){super.onCreate(b);getWindow().setStatusBarColor(Color.BLACK);getWindow().setNavigationBarColor(BG);showCalc();}
+ void shell(int active){
+  LinearLayout outer=new LinearLayout(this);outer.setOrientation(LinearLayout.VERTICAL);outer.setBackgroundColor(BG);
+  ViewCompat.setOnApplyWindowInsetsListener(outer,(v,i)->{Insets x=i.getInsets(WindowInsetsCompat.Type.systemBars());v.setPadding(0,x.top,0,x.bottom);return i;});
+  ScrollView sv=new ScrollView(this);page=new LinearLayout(this);page.setOrientation(LinearLayout.VERTICAL);page.setPadding(dp(17),dp(30),dp(17),dp(30));sv.addView(page);outer.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
+  LinearLayout nav=new LinearLayout(this);nav.setBackgroundColor(Color.rgb(12,22,38));String[] n={"Calculator","Flat","Materials","FAQ"};
+  for(int i=0;i<4;i++){final int q=i;Button b=new Button(this);b.setText(n[i]);b.setTextSize(10);b.setAllCaps(false);b.setTextColor(i==active?BLUE:MUT);b.setBackgroundColor(Color.TRANSPARENT);nav.addView(b,new LinearLayout.LayoutParams(0,dp(52),1));b.setOnClickListener(v->{save();if(q==0)showCalc();else if(q==1)showFlat();else if(q==2)showMaterials();else showFaq();});}outer.addView(nav);setContentView(outer);
+ }
+ LinearLayout card(String head){
+  LinearLayout c=new LinearLayout(this);c.setOrientation(LinearLayout.VERTICAL);c.setBackground(box(CARD,BORDER,12));page.addView(c,new LinearLayout.LayoutParams(-1,-2));mg(c,0,0,0,27);
+  TextView h=t(head,18,TXT);h.setTypeface(Typeface.DEFAULT,Typeface.BOLD);h.setPadding(dp(27),dp(25),dp(27),dp(25));c.addView(h);
+  View line=new View(this);line.setBackgroundColor(BORDER);c.addView(line,new LinearLayout.LayoutParams(-1,dp(1)));
+  LinearLayout body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(27),dp(22),dp(27),dp(25));c.addView(body);return body;
+ }
+ TextView label(LinearLayout c,String s){TextView l=t(s,15,TXT);l.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(l);mg(l,0,10,0,9);return l;}
+ EditText field(LinearLayout c,String lab,String val){label(c,lab);EditText e=new EditText(this);e.setText(val);e.setTextColor(TXT);e.setHintTextColor(Color.rgb(113,128,146));e.setTextSize(17);e.setSingleLine();e.setPadding(dp(14),0,dp(14),0);e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);e.setBackground(box(INPUT,Color.rgb(67,86,108),7));c.addView(e,new LinearLayout.LayoutParams(-1,dp(42)));mg(e,0,0,0,10);return e;}
+ Spinner spinner(LinearLayout c,String lab,String[] arr){label(c,lab);Spinner s=new Spinner(this);ArrayAdapter<String>a=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,arr){@Override public View getView(int p,View v,ViewGroup g){TextView z=(TextView)super.getView(p,v,g);z.setTextColor(TXT);z.setTextSize(16);z.setPadding(dp(14),0,dp(14),0);return z;}};s.setAdapter(a);s.setBackground(box(INPUT,Color.rgb(67,86,108),7));c.addView(s,new LinearLayout.LayoutParams(-1,dp(42)));mg(s,0,0,0,8);return s;}
+ void helper(LinearLayout c,String s){TextView v=t(s,13,BLUE);c.addView(v);mg(v,0,0,0,16);}
+ double val(EditText e){try{return Double.parseDouble(e.getText().toString());}catch(Exception x){return Double.NaN;}}
+ void save(){if(mat!=null)sharedMat=mat.getSelectedItemPosition();if(thick!=null)sharedT=thick.getText().toString();if(dieSpin!=null&&dieSpin.getSelectedItemPosition()>0)sharedD=dies[dieSpin.getSelectedItemPosition()];if(punch!=null)sharedR=punch.getText().toString();if(angle!=null)sharedA=angle.getText().toString();if(length!=null)sharedL=length.getText().toString();}
+ void watch(EditText e,TextView v){e.addTextChangedListener(new TextWatcher(){public void beforeTextChanged(CharSequence s,int a,int b,int c){}public void onTextChanged(CharSequence s,int a,int b,int c){try{v.setText(String.format(Locale.US,"≈ %.3f mm",Double.parseDouble(s.toString())*25.4));}catch(Exception x){v.setText("");}}public void afterTextChanged(Editable e){}});}
+ void showCalc(){
+  shell(0);LinearLayout in=card("Input Parameters");mat=spinner(in,"Material Type",names);mat.setSelection(sharedMat);helper(in,"▱  Manage material library");
+  thick=field(in,"Material Thickness (in)",sharedT);dieSpin=spinner(in,"Die Width",dies);for(int i=1;i<dies.length;i++)if(dies[i].equals(sharedD))dieSpin.setSelection(i);
+  LinearLayout pr=new LinearLayout(this);pr.setOrientation(LinearLayout.HORIZONTAL);TextView pl=label(pr,"Punch Radius (in)");punchConv=t("",13,BLUE);pr.addView(punchConv);in.addView(pr);punch=fieldNoLabel(in,sharedR);
+  LinearLayout lr=new LinearLayout(this);lr.setOrientation(LinearLayout.HORIZONTAL);TextView ll=label(lr,"Bend Length (in)");lenConv=t("",13,BLUE);lr.addView(lenConv);in.addView(lr);angle=field(in,"Bend Angle (degrees)",sharedA);length=fieldNoLabel(in,sharedL);watch(punch,punchConv);watch(length,lenConv);punch.setText(sharedR);length.setText(sharedL);
+  LinearLayout res=card("Calculation Result");resultBox=res;emptyResult();Button go=new Button(this);go.setText("CALCULATE");go.setTextColor(Color.WHITE);go.setTypeface(Typeface.DEFAULT,Typeface.BOLD);go.setBackground(box(Color.rgb(37,99,235),Color.rgb(37,99,235),8));page.addView(go,new LinearLayout.LayoutParams(-1,dp(52)));mg(go,0,-14,0,27);go.setOnClickListener(v->calc());
+  LinearLayout q=card("Quick Reference");ref(q,"Die Size Rule","Steel/Stainless: 4-6× thickness | Aluminum: 6-8× thickness");ref(q,"Common K-Factors","Soft materials: 0.38-0.41 | Hard materials: 0.43-0.46");ref(q,"Typical Punch Radius","Usually 0.031\" - 0.125\" depending on material and tooling");
+ }
+ EditText fieldNoLabel(LinearLayout c,String val){EditText e=new EditText(this);e.setText(val);e.setTextColor(TXT);e.setTextSize(17);e.setSingleLine();e.setPadding(dp(14),0,dp(14),0);e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);e.setBackground(box(INPUT,Color.rgb(67,86,108),7));c.addView(e,new LinearLayout.LayoutParams(-1,dp(42)));mg(e,0,0,0,10);return e;}
+ void ref(LinearLayout c,String h,String b){TextView x=t(h,13,TXT);x.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(x);mg(x,0,8,0,7);TextView y=t(b,13,MUT);c.addView(y);mg(y,0,0,0,7);}
+ void emptyResult(){resultBox.removeAllViews();Space s=new Space(this);resultBox.addView(s,new LinearLayout.LayoutParams(1,dp(45)));TextView icon=t("▣",36,MUT);icon.setGravity(Gravity.CENTER);resultBox.addView(icon);TextView h=t("Enter all parameters",17,TXT);h.setTypeface(Typeface.DEFAULT,Typeface.BOLD);h.setGravity(Gravity.CENTER);resultBox.addView(h);mg(h,0,18,0,5);TextView b=t("to calculate bend deduction",14,MUT);b.setGravity(Gravity.CENTER);resultBox.addView(b);Space z=new Space(this);resultBox.addView(z,new LinearLayout.LayoutParams(1,dp(45)));}
+ void calc(){save();resultBox.removeAllViews();double th=val(thick),r=val(punch),a=val(angle),bl=val(length);int di=dieSpin.getSelectedItemPosition();if(!(th>0&&r>=0&&a>0&&a<180&&bl>0&&di>0)){TextView e=t("Enter all parameters to calculate bend deduction.",15,MUT);e.setGravity(Gravity.CENTER);resultBox.addView(e);return;}double d=Double.parseDouble(dies[di]);int i=sharedMat;double er=Math.max(r,d/6),rr=Math.toRadians(a),ba=rr*(er+k[i]*th),bd=2*Math.tan(rr/2)*(er+th)-ba,tonsFt=1.33*tensile[i]*th*th/d/2000,total=tonsFt*(bl/12),fl=d/2+bd/2;TextView o=t(String.format(Locale.US,"Bend Deduction\n%.4f in\n\nBend Allowance\n%.4f in\n\nEffective Inside Radius\n%.4f in\n\nRequired Tonnage\n%.2f tons\n\nRecommended Tonnage (+15%%)\n%.0f tons\n\nMinimum Flange\n%.4f in",bd,ba,er,total,Math.ceil(total*1.15),fl),16,TXT);o.setLineSpacing(0,1.15f);resultBox.addView(o);}
+ void showFlat(){shell(1);LinearLayout d=card("Flat Pattern");f1=field(d,"Flange 1 (in)","");f2=field(d,"Flange 2 (in)","");bends=field(d,"Number of Bends","1");LinearLayout r=card("Reference Data");mat=spinner(r,"Material Type",names);mat.setSelection(sharedMat);thick=field(r,"Material Thickness (in)",sharedT);dieSpin=spinner(r,"Die Width",dies);for(int i=1;i<dies.length;i++)if(dies[i].equals(sharedD))dieSpin.setSelection(i);punch=field(r,"Punch Radius (in)",sharedR);angle=field(r,"Bend Angle (degrees)",sharedA);TextView note=t("Reference data is shared with the Bend Deduction Calculator.",13,BLUE);r.addView(note);}
+ void showMaterials(){shell(2);for(int i=0;i<names.length;i++){LinearLayout c=card(names[i]);ref(c,"Tensile Strength",String.format(Locale.US,"%,.0f PSI",tensile[i]));ref(c,"K-Factor",String.format(Locale.US,"%.2f",k[i]));}}
+ void showFaq(){shell(3);String[][] x={{"K-Factor","Neutral-axis location through material thickness."},{"Bend Allowance","Arc length of the neutral axis through the bend."},{"Bend Deduction","Amount subtracted from outside flange dimensions to obtain developed flat length."},{"V-Die Opening","Width of the lower die opening used for air bending."},{"Tonnage","Estimated forming force; verify machine and tooling capacity."}};for(String[] q:x){LinearLayout c=card(q[0]);TextView b=t(q[1],14,MUT);c.addView(b);}}
 }
