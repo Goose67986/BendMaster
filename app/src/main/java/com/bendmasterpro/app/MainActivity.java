@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
   LinearLayout outer=new LinearLayout(this);outer.setOrientation(LinearLayout.VERTICAL);outer.setBackgroundColor(BG);
   ViewCompat.setOnApplyWindowInsetsListener(outer,(v,i)->{Insets x=i.getInsets(WindowInsetsCompat.Type.systemBars());v.setPadding(0,x.top,0,x.bottom);return i;});
   ScrollView sv=new ScrollView(this);page=new LinearLayout(this);page.setOrientation(LinearLayout.VERTICAL);page.setPadding(dp(17),dp(30),dp(17),dp(30));sv.addView(page);outer.addView(sv,new LinearLayout.LayoutParams(-1,0,1));
-  LinearLayout nav=new LinearLayout(this);nav.setBackgroundColor(Color.rgb(12,22,38));String[] n={"Calculator","Flat","Materials","FAQ"};
-  for(int i=0;i<4;i++){final int q=i;Button b=new Button(this);b.setText(n[i]);b.setTextSize(10);b.setAllCaps(false);b.setTextColor(i==active?BLUE:MUT);b.setBackgroundColor(Color.TRANSPARENT);nav.addView(b,new LinearLayout.LayoutParams(0,dp(52),1));b.setOnClickListener(v->{save();if(q==0)showCalc();else if(q==1)showFlat();else if(q==2)showMaterials();else showFaq();});}outer.addView(nav);setContentView(outer);
+  LinearLayout nav=new LinearLayout(this);nav.setBackgroundColor(Color.rgb(12,22,38));nav.setPadding(0,0,0,dp(4));String[] n={"Calculator","Flat","Materials","FAQ"};
+  for(int i=0;i<4;i++){final int q=i;Button b=new Button(this);b.setText(n[i]);b.setTextSize(10);b.setAllCaps(false);b.setTextColor(i==active?BLUE:MUT);b.setBackgroundColor(Color.TRANSPARENT);nav.addView(b,new LinearLayout.LayoutParams(0,dp(52),1));b.setOnClickListener(v->{save();if(q==0)showCalc();else if(q==1)showFlat();else if(q==2)showMaterials();else showFaq();});}outer.addView(nav,new LinearLayout.LayoutParams(-1,dp(56)));setContentView(outer);ViewCompat.requestApplyInsets(outer);
  }
  LinearLayout card(String head){
   LinearLayout c=new LinearLayout(this);c.setOrientation(LinearLayout.VERTICAL);c.setBackground(box(CARD,BORDER,12));page.addView(c,new LinearLayout.LayoutParams(-1,-2));mg(c,0,0,0,27);
