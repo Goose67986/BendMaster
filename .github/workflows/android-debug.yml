@@ -5,6 +5,9 @@ on:
   push:
     branches: [ "main" ]
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,9 +25,27 @@ jobs:
           gradle-version: '8.13'
       - name: Build debug APK
         run: gradle assembleDebug
-      - name: Upload APK
+      - name: Read app version
+        id: version
+        shell: bash
+        run: |
+          VERSION=$(grep "versionName" app/build.gradle | sed -E "s/.*versionName[[:space:]]+'([^']+)'.*/\\1/")
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          cp app/build/outputs/apk/debug/app-debug.apk "BendMasterPro-v${VERSION}.apk"
+      - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: BendMasterPro-v0.1-debug-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: BendMasterPro-v${{ steps.version.outputs.version }}-apk
+          path: BendMasterPro-v${{ steps.version.outputs.version }}.apk
           if-no-files-found: error
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.version.outputs.version }}-build-${{ github.run_number }}
+          name: BendMaster Pro v${{ steps.version.outputs.version }}
+          body: |
+            Automated BendMaster Pro Android test build.
+
+            Download the APK below and install it on your Android device.
+          files: BendMasterPro-v${{ steps.version.outputs.version }}.apk
+          make_latest: true
