@@ -37,9 +37,9 @@ public class MainActivity extends AppCompatActivity {
  }
  LinearLayout card(String head){
   LinearLayout c=new LinearLayout(this);c.setOrientation(LinearLayout.VERTICAL);c.setBackground(box(CARD,BORDER,12));page.addView(c,new LinearLayout.LayoutParams(-1,-2));mg(c,0,0,0,27);
-  TextView h=t(head,18,TXT);h.setTypeface(Typeface.DEFAULT,Typeface.BOLD);h.setPadding(dp(27),dp(25),dp(27),dp(25));c.addView(h);
+  TextView h=t(head,18,TXT);h.setTypeface(Typeface.DEFAULT,Typeface.BOLD);h.setPadding(dp(27),dp(15),dp(27),dp(15));c.addView(h);
   View line=new View(this);line.setBackgroundColor(BORDER);c.addView(line,new LinearLayout.LayoutParams(-1,dp(1)));
-  LinearLayout body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(27),dp(22),dp(27),dp(25));c.addView(body);return body;
+  LinearLayout body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(27),dp(14),dp(27),dp(20));c.addView(body);return body;
  }
  TextView label(LinearLayout c,String s){TextView l=t(s,15,TXT);l.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(l);mg(l,0,10,0,9);return l;}
  EditText field(LinearLayout c,String lab,String val){label(c,lab);EditText e=new EditText(this);e.setText(val);if(lab.startsWith("Material Thickness"))e.setHint(metric?"3.175":"0.125");e.setTextColor(TXT);e.setHintTextColor(Color.rgb(113,128,146));e.setTextSize(17);e.setSingleLine();e.setPadding(dp(14),0,dp(14),0);e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);e.setBackground(box(INPUT,Color.rgb(67,86,108),7));c.addView(e,new LinearLayout.LayoutParams(-1,dp(42)));mg(e,0,0,0,10);return e;}
