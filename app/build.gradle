@@ -2,7 +2,7 @@ plugins { id 'com.android.application' }
 android {
  namespace 'com.bendmasterpro.app'
  compileSdk 36
- defaultConfig { applicationId 'com.bendmasterpro.app'; minSdk 26; targetSdk 36; versionCode 6; versionName '0.6' }
+ defaultConfig { applicationId 'com.bendmasterpro.app'; minSdk 26; targetSdk 36; versionCode 7; versionName '0.7' }
 }
 dependencies {
  implementation 'androidx.appcompat:appcompat:1.7.1'
