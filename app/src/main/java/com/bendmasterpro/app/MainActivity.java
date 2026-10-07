@@ -15,7 +15,7 @@ import java.util.*;
 public class MainActivity extends AppCompatActivity {
  final int BG=Color.rgb(15,27,47), CARD=Color.rgb(30,43,63), INPUT=Color.rgb(53,70,91), BORDER=Color.rgb(48,65,86), TXT=Color.rgb(239,243,248), MUT=Color.rgb(148,163,184), BLUE=Color.rgb(96,165,250);
  LinearLayout page,resultBox,customDieWrap; Spinner mat,dieSpin; EditText thick,punch,angle,length,f1,f2,bends,customDie; TextView punchConv,lenConv; boolean metric=false;
- int sharedMat=2; String sharedT="0.125",sharedD="",sharedR="0.030",sharedA="90",sharedL="1";
+ int sharedMat=2; String sharedT="",sharedD="",sharedR="0.030",sharedA="90",sharedL="1";
  final String[] names={"5052-H32 Aluminum","6061-T6 Aluminum","A572 Gr42","A572 Gr50","CRS","HRPO A36","304 Stainless","316 Stainless"};
  final String[] cats={"aluminum","aluminum","steel","steel","steel","steel","stainless","stainless"};
  final double[] k={.41,.41,.44,.44,.44,.44,.43,.43}, tensile={33000,45000,60000,65000,55000,58000,75000,85000};
@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
   LinearLayout body=new LinearLayout(this);body.setOrientation(LinearLayout.VERTICAL);body.setPadding(dp(27),dp(22),dp(27),dp(25));c.addView(body);return body;
  }
  TextView label(LinearLayout c,String s){TextView l=t(s,15,TXT);l.setTypeface(Typeface.DEFAULT,Typeface.BOLD);c.addView(l);mg(l,0,10,0,9);return l;}
- EditText field(LinearLayout c,String lab,String val){label(c,lab);EditText e=new EditText(this);e.setText(val);e.setTextColor(TXT);e.setHintTextColor(Color.rgb(113,128,146));e.setTextSize(17);e.setSingleLine();e.setPadding(dp(14),0,dp(14),0);e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);e.setBackground(box(INPUT,Color.rgb(67,86,108),7));c.addView(e,new LinearLayout.LayoutParams(-1,dp(42)));mg(e,0,0,0,10);return e;}
+ EditText field(LinearLayout c,String lab,String val){label(c,lab);EditText e=new EditText(this);e.setText(val);if(lab.startsWith("Material Thickness"))e.setHint(metric?"3.175":"0.125");e.setTextColor(TXT);e.setHintTextColor(Color.rgb(113,128,146));e.setTextSize(17);e.setSingleLine();e.setPadding(dp(14),0,dp(14),0);e.setInputType(InputType.TYPE_CLASS_NUMBER|InputType.TYPE_NUMBER_FLAG_DECIMAL);e.setBackground(box(INPUT,Color.rgb(67,86,108),7));c.addView(e,new LinearLayout.LayoutParams(-1,dp(42)));mg(e,0,0,0,10);return e;}
  Spinner spinner(LinearLayout c,String lab,String[] arr){label(c,lab);Spinner s=new Spinner(this);ArrayAdapter<String>a=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_dropdown_item,arr){@Override public View getView(int p,View v,ViewGroup g){TextView z=(TextView)super.getView(p,v,g);z.setTextColor(TXT);z.setTextSize(16);z.setPadding(dp(14),0,dp(14),0);return z;}};s.setAdapter(a);s.setBackground(box(INPUT,Color.rgb(67,86,108),7));c.addView(s,new LinearLayout.LayoutParams(-1,dp(42)));mg(s,0,0,0,8);return s;}
  void helper(LinearLayout c,String s){TextView v=t(s,13,BLUE);c.addView(v);mg(v,0,0,0,16);}
  double val(EditText e){try{return Double.parseDouble(e.getText().toString());}catch(Exception x){return Double.NaN;}}
