@@ -1,6 +1,6 @@
 <resources>
-<style name="Theme.BendMasterPro" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+<style name="Theme.BendMasterPro" parent="Theme.MaterialComponents.NoActionBar">
     <item name="android:fontFamily">sans</item>
     <item name="android:windowLightStatusBar">false</item>
-</style>
+<item name="colorPrimary">#28B6FF</item><item name="colorSecondary">#FFA224</item><item name="colorSurface">#112030</item><item name="colorOnSurface">#EFF3F8</item><item name="android:colorBackground">#07111D</item><item name="android:windowBackground">#07111D</item><item name="android:colorAccent">#28B6FF</item></style>
 </resources>
