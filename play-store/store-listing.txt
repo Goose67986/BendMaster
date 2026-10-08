@@ -1,0 +1,30 @@
+APP NAME: BendPro 360
+CATEGORY: Tools
+TYPE: App
+PRICE: Free
+LANGUAGE: English (United States)
+SUPPORT EMAIL: nngbusiness@gmail.com
+SHORT DESCRIPTION: Press brake bend deduction, flat length, tonnage and material tools.
+
+FULL DESCRIPTION:
+BendPro 360 is an offline press brake calculator for sheet metal operators, fabricators and programmers.
+
+Calculate bend allowance, bend deduction, estimated forming tonnage, effective inside radius and minimum flange length. Use the flat pattern calculator to work from outside flange dimensions and view formed-part and flat-layout diagrams.
+
+Features:
+• Bend allowance and bend deduction calculations
+• Flat length calculations for multiple flanges
+• Estimated required tonnage and a 15% allowance
+• Suggested V-die openings based on thickness and material family
+• Warnings when the selected die opening is below the app's minimum guideline
+• Editable material K-factors and tensile strength
+• Add and remove materials stored locally on your device
+• Dark interface with blue and orange accents
+• Offline operation without an account
+
+Version 1.0 uses inch-based dimension inputs. Tooling suggestions and calculated values are estimates. Confirm material properties, actual bend results, and machine/tooling limits before production use.
+
+No advertising, subscriptions or paid upgrades in version 1.0.
+
+RELEASE NOTES:
+Initial BendPro 360 testing release with a compact dark interface, material library, bend calculations and flat pattern diagrams.
