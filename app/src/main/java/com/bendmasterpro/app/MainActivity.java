@@ -80,19 +80,19 @@ public class MainActivity extends AppCompatActivity {
  resultPair(summary,"Material",materialNames.get(i),"K-Factor",String.format(Locale.US,"%.3f",materialK.get(i)));
  resultPair(summary,"Thickness",String.format(Locale.US,"%.3f in  (%.3f mm)",th,th*25.4),"Die Size",String.format(Locale.US,"%.4f in  (%.2f mm)",d,d*25.4));
  resultPair(summary,"Punch Radius",String.format(Locale.US,"%.3f in",r),"Bend Angle",String.format(Locale.US,"%.0f°",ang));
- metricResult(summary,"Shortest Flange Length",String.format(Locale.US,"%.4f in (%.3f mm)",fl,fl*25.4),TXT);
+ resultPair(summary,"Shortest Flange Length",String.format(Locale.US,"%.4f in (%.3f mm)",fl,fl*25.4),"","");
  LinearLayout tonnage=resultSection(resultBox,"Tonnage Requirements");
  resultPair(tonnage,"Per Foot",String.format(Locale.US,"%.2f US tons",tonsFt),"Required ("+String.format(Locale.US,"%.2f",bl)+" in)",String.format(Locale.US,"%.2f US tons",total));
  metricResult(tonnage,"Recommended (+15%)",String.format(Locale.US,"%.0f US tons",Math.ceil(total*1.15)),ORANGE);
  LinearLayout method=resultSection(resultBox,"Calculation Method");
- metricResult(method,"Effective Inside Radius",String.format(Locale.US,"%.4f in",er),TXT);
+ metricResult(method,"Effective Inside Radius",String.format(Locale.US,"%.4f in",er),BLUE);
  metricResult(method,"Bend Allowance",String.format(Locale.US,"%.4f in",ba),BLUE);
  metricResult(method,"Bend Deduction",String.format(Locale.US,"%.4f in",bd),BLUE);
  TextView formula=t("Air bending: F (US tons) = 1.33 × tensile PSI × thickness² × bend length / (die opening × 2000).\\nNominal 90° air-bending estimate; verify tooling, machine and material.",12,MUT);method.addView(formula);
  Button use=new Button(this);use.setText("Use this Bend Deduction  →");use.setAllCaps(false);use.setTextColor(Color.WHITE);use.setBackground(box(Color.rgb(37,99,235),Color.rgb(37,99,235),9));resultBox.addView(use,new LinearLayout.LayoutParams(-1,dp(48)));mg(use,0,12,0,4);use.setOnClickListener(v->{save();showFlat();});
  }
  LinearLayout resultSection(LinearLayout parent,String title){LinearLayout box=new LinearLayout(this);box.setOrientation(LinearLayout.VERTICAL);box.setPadding(dp(12),dp(12),dp(12),dp(12));box.setBackground(box(Color.rgb(12,23,40),BORDER,10));parent.addView(box,new LinearLayout.LayoutParams(-1,-2));mg(box,0,8,0,12);TextView h=t(title,17,TXT);h.setTypeface(Typeface.DEFAULT,Typeface.BOLD);box.addView(h);mg(h,0,0,0,9);return box;}
- void resultPair(LinearLayout parent,String leftName,String leftValue,String rightName,String rightValue){LinearLayout row=new LinearLayout(this);row.setOrientation(LinearLayout.HORIZONTAL);parent.addView(row);LinearLayout l=new LinearLayout(this),r=new LinearLayout(this);l.setOrientation(LinearLayout.VERTICAL);r.setOrientation(LinearLayout.VERTICAL);row.addView(l,new LinearLayout.LayoutParams(0,-2,1));row.addView(r,new LinearLayout.LayoutParams(0,-2,1));l.addView(t(leftName,12,MUT));l.addView(t(leftValue,14,TXT));r.addView(t(rightName,12,MUT));r.addView(t(rightValue,14,TXT));mg(row,0,5,0,11);}
+ void resultPair(LinearLayout parent,String leftName,String leftValue,String rightName,String rightValue){LinearLayout row=new LinearLayout(this);row.setOrientation(LinearLayout.HORIZONTAL);parent.addView(row);LinearLayout l=new LinearLayout(this),r=new LinearLayout(this);l.setOrientation(LinearLayout.VERTICAL);r.setOrientation(LinearLayout.VERTICAL);row.addView(l,new LinearLayout.LayoutParams(0,-2,1));row.addView(r,new LinearLayout.LayoutParams(0,-2,1));l.addView(t(leftName,12,MUT));l.addView(t(leftValue,14,BLUE));r.addView(t(rightName,12,MUT));r.addView(t(rightValue,14,BLUE));mg(row,0,5,0,11);}
  void metricResult(LinearLayout parent,String name,String value,int color){LinearLayout row=new LinearLayout(this);row.setGravity(Gravity.CENTER_VERTICAL);row.setPadding(0,dp(7),0,dp(7));row.addView(t(name,13,MUT),new LinearLayout.LayoutParams(0,-2,1));TextView number=t(value,18,color);number.setTypeface(Typeface.DEFAULT,Typeface.BOLD);row.addView(number);parent.addView(row);}
 
  void showFlat(){
