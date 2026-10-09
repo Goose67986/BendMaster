@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
  void calc(){save();resultBox.removeAllViews();double th=val(thick),r=val(punch),ang=val(angle),bl=val(length),d=selectedDie();if(!(th>0&&r>=0&&ang>0&&ang<180&&bl>0&&d>0)){resultBox.addView(t("Enter all parameters to calculate bend deduction.",15,MUT));return;}int i=Math.min(sharedMat,materialNames.size()-1);double er=Math.max(r,d/6.0),rad=Math.toRadians(ang),ba=rad*(er+materialK.get(i)*th),bd=2*Math.tan(rad/2)*(er+th)-ba;
  // PSI × inch dimensions produce pounds of force per inch of bend length.
  double tonsFt=1.33*materialTensile.get(i)*th*th/d*12.0/2000.0;
- double total=tonsFt*bl/12.0,fl=d/2+bd/2;
+ double total=tonsFt*bl/12.0,fl=d/2-bd/2;
  LinearLayout summary=resultSection(resultBox,"Summary");
  resultPair(summary,"Material",materialNames.get(i),"K-Factor",String.format(Locale.US,"%.3f",materialK.get(i)));
  resultPair(summary,"Thickness",String.format(Locale.US,"%.3f in  (%.3f mm)",th,th*25.4),"Die Size",String.format(Locale.US,"%.4f in  (%.2f mm)",d,d*25.4));
