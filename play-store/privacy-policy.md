@@ -6,7 +6,7 @@
 
 This Privacy Policy explains how BendPro 360 — Press Brake Calculator ("BendPro 360," "the app," "we," or "us") handles information. It applies to the current Android app, version 1.0.2, with package ID `com.Bendpro360.myapp`.
 
-The developer can be contacted at **nngbusiness@gmail.com**.
+The developer can be contacted at **ntg67986@gmail.com**.
 
 ## 1. Information processed by the app
 
@@ -48,7 +48,7 @@ Because the app has no user accounts and the developer receives no calculation o
 
 ## 6. Support correspondence
 
-If you email **nngbusiness@gmail.com**, we receive your email address and whatever information you choose to include. We use that information to respond to your request, troubleshoot reported problems, and maintain necessary support records.
+If you email **ntg67986@gmail.com**, we receive your email address and whatever information you choose to include. We use that information to respond to your request, troubleshoot reported problems, and maintain necessary support records.
 
 Support correspondence is processed through our email service provider and retained for as long as needed to handle the request and related follow-up, or to meet applicable legal requirements. It is not used for advertising or sold. You can contact the same address to request access to or deletion of support correspondence, subject to any applicable retention requirements. Please avoid including unnecessary sensitive information.
 
@@ -66,4 +66,4 @@ We may update this policy when app features or information-handling practices ch
 
 ## 10. Contact
 
-For privacy questions or requests concerning BendPro 360 — Press Brake Calculator, email **[nngbusiness@gmail.com](mailto:nngbusiness@gmail.com)**.
+For privacy questions or requests concerning BendPro 360 — Press Brake Calculator, email **[ntg67986@gmail.com](mailto:ntg67986@gmail.com)**.
